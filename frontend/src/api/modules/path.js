@@ -4,7 +4,7 @@ const BASE_URL = '/paths'
 
 const PathService = {
   get(params) {
-    return ApiService.get(`${BASE_URL}`, params);
+    return ApiService.getWithParams(`${BASE_URL}`, params)
   }
 }
 
