@@ -78,7 +78,7 @@ public class Line extends BaseEntity {
         return intervalTime;
     }
 
-    private int getExtraFare() {
+    public int getExtraFare() {
         return extraFare;
     }
 

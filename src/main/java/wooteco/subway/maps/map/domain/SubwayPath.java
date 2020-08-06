@@ -50,6 +50,6 @@ public class SubwayPath {
     }
 
     private int calculateExtraFare() {
-        return 0;
+        return lineStationEdges.stream().mapToInt(LineStationEdge::getLineExtraFare).max().orElse(0);
     }
 }
