@@ -32,6 +32,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 @WebMvcTest(controllers = {MapController.class})
 public class MapDocumentation extends Documentation {
@@ -69,6 +71,11 @@ public class MapDocumentation extends Documentation {
                         getDocumentResponse(),
                         requestHeaders(
                                 headerWithName("Authorization").description("Bearer auth credentials")),
+                        requestParameters(
+                                parameterWithName("source").description("출발역 아이디"),
+                                parameterWithName("target").description("도착역 아이디"),
+                                parameterWithName("type").description("검색 타입 (최단거리 / 최소시간)")
+                        ),
                         responseFields(
                                 fieldWithPath("duration").type(JsonFieldType.NUMBER).description("소요 시간"),
                                 fieldWithPath("distance").type(JsonFieldType.NUMBER).description("총 거리"),
