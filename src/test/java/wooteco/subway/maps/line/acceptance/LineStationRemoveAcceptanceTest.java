@@ -2,19 +2,17 @@ package wooteco.subway.maps.line.acceptance;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import wooteco.subway.common.acceptance.AcceptanceTest;
-import wooteco.subway.maps.line.dto.LineResponse;
-import wooteco.subway.maps.station.dto.StationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wooteco.subway.common.acceptance.AcceptanceTest;
 import wooteco.subway.maps.line.acceptance.step.LineAcceptanceStep;
 import wooteco.subway.maps.line.acceptance.step.LineStationAcceptanceStep;
+import wooteco.subway.maps.line.dto.LineResponse;
 import wooteco.subway.maps.station.acceptance.step.StationAcceptanceStep;
+import wooteco.subway.maps.station.dto.StationResponse;
 
 import java.util.Arrays;
-
-import static wooteco.subway.maps.line.acceptance.step.LineAcceptanceStep.지하철_노선_조회_요청;
 
 @DisplayName("지하철 노선에 역 제외 관련 기능")
 public class LineStationRemoveAcceptanceTest extends AcceptanceTest {
@@ -28,7 +26,7 @@ public class LineStationRemoveAcceptanceTest extends AcceptanceTest {
         super.setUp();
 
         // given
-        ExtractableResponse<Response> createLineResponse = LineAcceptanceStep.지하철_노선_등록되어_있음("2호선", "GREEN");
+        ExtractableResponse<Response> createLineResponse = LineAcceptanceStep.지하철_노선_등록되어_있음("2호선", "GREEN", 100);
         ExtractableResponse<Response> createdStationResponse1 = StationAcceptanceStep.지하철역_등록되어_있음("강남역");
         ExtractableResponse<Response> createdStationResponse2 = StationAcceptanceStep.지하철역_등록되어_있음("역삼역");
         ExtractableResponse<Response> createdStationResponse3 = StationAcceptanceStep.지하철역_등록되어_있음("선릉역");
