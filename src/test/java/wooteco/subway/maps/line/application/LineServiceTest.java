@@ -1,15 +1,15 @@
 package wooteco.subway.maps.line.application;
 
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import wooteco.subway.common.TestObjectUtils;
 import wooteco.subway.maps.line.domain.Line;
 import wooteco.subway.maps.line.domain.LineRepository;
 import wooteco.subway.maps.line.domain.LineStation;
 import wooteco.subway.maps.line.dto.LineResponse;
-import wooteco.subway.common.TestObjectUtils;
 import wooteco.subway.maps.station.application.StationService;
 import wooteco.subway.maps.station.domain.Station;
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class LineServiceTest {
         stations = Lists.newArrayList(station1, station2).stream()
                 .collect(Collectors.toMap(Station::getId, Function.identity()));
 
-        line = TestObjectUtils.createLine(1L, "신분당선", "RED");
+        line = TestObjectUtils.createLine(1L, "신분당선", "RED", 200);
         line.addLineStation(new LineStation(1L, null, 10, 10));
         line.addLineStation(new LineStation(2L, 1L, 10, 10));
     }

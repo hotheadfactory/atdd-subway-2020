@@ -1,12 +1,6 @@
 package wooteco.subway.maps.line.application;
 
 import com.google.common.collect.Maps;
-import wooteco.subway.maps.line.domain.Line;
-import wooteco.subway.maps.line.domain.LineStation;
-import wooteco.subway.maps.line.dto.LineStationCreateRequest;
-import wooteco.subway.common.TestObjectUtils;
-import wooteco.subway.maps.station.application.StationService;
-import wooteco.subway.maps.station.domain.Station;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import wooteco.subway.common.TestObjectUtils;
+import wooteco.subway.maps.line.domain.Line;
+import wooteco.subway.maps.line.domain.LineStation;
+import wooteco.subway.maps.line.dto.LineStationCreateRequest;
+import wooteco.subway.maps.station.application.StationService;
+import wooteco.subway.maps.station.domain.Station;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class LineStationServiceTest {
         stations.put(2L, station2);
         when(stationService.findStationsByIds(anyList())).thenReturn(stations);
 
-        Line line = TestObjectUtils.createLine(1L, "신분당선", "RED");
+        Line line = TestObjectUtils.createLine(1L, "신분당선", "RED", 200);
         when(lineService.findLineById(anyLong())).thenReturn(line);
 
         // when
@@ -79,7 +79,7 @@ public class LineStationServiceTest {
     @Test
     void removeLineStation() {
         // given
-        Line line = TestObjectUtils.createLine(1L, "신분당선", "RED");
+        Line line = TestObjectUtils.createLine(1L, "신분당선", "RED", 200);
         line.addLineStation(new LineStation(1L, null, 10, 10));
         line.addLineStation(new LineStation(2L, 1L, 10, 10));
         when(lineService.findLineById(anyLong())).thenReturn(line);
