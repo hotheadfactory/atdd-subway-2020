@@ -22,6 +22,10 @@
                     <td>간격</td>
                     <td>{{ lineDetail.intervalTime }}</td>
                   </tr>
+                <tr>
+                  <td>추가 요금</td>
+                  <td>{{ lineDetail.extraFare }}</td>
+                </tr>
                 </tbody>
               </template>
             </v-simple-table>

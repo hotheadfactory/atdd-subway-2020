@@ -39,6 +39,16 @@
           outlined
         ></v-text-field>
       </v-col>
+      <v-col cols="4">
+          <v-text-field
+            v-model="lineForm.extraFare"
+            :rules="rules.line.extraFare"
+            color="grey darken-1"
+            label="추가 요금"
+            placeholder="추가 요금"
+            outlined
+          ></v-text-field>
+        </v-col>
     </v-row>
     <div>
       <v-text-field v-model="lineForm.color" :rules="rules.line.color" :value="lineForm.color" label="노선 색상" filled disabled></v-text-field>
@@ -97,7 +107,8 @@ export default {
         color: '',
         startTime: '',
         endTime: '',
-        intervalTime: ''
+        intervalTime: '',
+        extraFare: ''
       },
       isValidLine: false,
       lineColors: [...LINE_COLORS]
