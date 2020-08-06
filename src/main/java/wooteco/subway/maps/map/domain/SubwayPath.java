@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SubwayPath {
+    public static final int BASE_FARE = 1250;
     private List<LineStationEdge> lineStationEdges;
 
     public SubwayPath(List<LineStationEdge> lineStationEdges) {
@@ -34,6 +35,21 @@ public class SubwayPath {
     }
 
     public int calculateFare() {
-        return 1250;
+        return calculateFareByDistance() + calculateExtraFare();
+    }
+
+    private int calculateFareByDistance() {
+        int distance = calculateDistance();
+        if (distance < 10) {
+            return BASE_FARE;
+        }
+        if (distance < 50) {
+            return (int) (BASE_FARE + ((Math.ceil((distance - 10) / 5) + 1) * 100));
+        }
+        return (int) (BASE_FARE + ((Math.ceil((distance - 50) / 8) + 1) * 100));
+    }
+
+    private int calculateExtraFare() {
+        return 0;
     }
 }
