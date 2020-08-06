@@ -23,9 +23,7 @@ import wooteco.subway.maps.station.dto.StationResponse;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.mockito.Mockito.when;
@@ -34,8 +32,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 @WebMvcTest(controllers = {MapController.class})
 public class MapDocumentation extends Documentation {
@@ -53,10 +49,6 @@ public class MapDocumentation extends Documentation {
 
     @Test
     void findPath() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("sourceId", 1L);
-        params.put("targetId", 3L);
-        params.put("type", PathType.DISTANCE);
 
         List<StationResponse> stationResponses = Lists.newArrayList(
                 new StationResponse(1L, "복정역", LocalDateTime.now(), LocalDateTime.now()),
@@ -68,9 +60,8 @@ public class MapDocumentation extends Documentation {
         given().log().all().
                 header("Authorization", "Bearer " + tokenResponse.getAccessToken()).
                 accept(MediaType.APPLICATION_JSON_VALUE).
-                params(params).
                 when().
-                get("/paths").
+                get("/paths?source=1&target=3&type=DISTANCE").
                 then().
                 log().all().
                 apply(document("maps/findPath",
@@ -78,11 +69,6 @@ public class MapDocumentation extends Documentation {
                         getDocumentResponse(),
                         requestHeaders(
                                 headerWithName("Authorization").description("Bearer auth credentials")),
-                        pathParameters(
-                                parameterWithName("sourceId").description("출발역 아이디"),
-                                parameterWithName("targetId").description("도착역 아이디"),
-                                parameterWithName("type").description("검색 타입 (최단거리 / 최소시간)")
-                        ),
                         responseFields(
                                 fieldWithPath("duration").type(JsonFieldType.NUMBER).description("소요 시간"),
                                 fieldWithPath("distance").type(JsonFieldType.NUMBER).description("총 거리"),
@@ -96,7 +82,7 @@ public class MapDocumentation extends Documentation {
     @Test
     void getMaps() {
         List<LineStationResponse> lineStationResponses = Lists.newArrayList(
-                new LineStationResponse(new StationResponse(1L, "삼성역", LocalDateTime.now(), LocalDateTime.now()), null, 1L, 5, 5)
+                new LineStationResponse(new StationResponse(1L, "삼성역", LocalDateTime.now(), LocalDateTime.now()), 2L, 1L, 5, 5)
         );
 
         List<LineResponse> lineResponses = Lists.newArrayList(
@@ -134,6 +120,7 @@ public class MapDocumentation extends Documentation {
                                 fieldWithPath("lineResponses[].stations[].lineId").type(JsonFieldType.NUMBER).description("구간 노선 아이디"),
                                 fieldWithPath("lineResponses[].stations[].distance").type(JsonFieldType.NUMBER).description("구간 간 거리"),
                                 fieldWithPath("lineResponses[].stations[].duration").type(JsonFieldType.NUMBER).description("구간 간 소요 시간"),
+                                fieldWithPath("lineResponses[].extraFare").type(JsonFieldType.NUMBER).description("노선 추가 요금"),
                                 fieldWithPath("lineResponses[].createdDate").type(JsonFieldType.STRING).description("생성 시각"),
                                 fieldWithPath("lineResponses[].modifiedDate").type(JsonFieldType.STRING).description("수정 시각")))).
                 extract();
