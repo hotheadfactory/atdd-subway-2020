@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PathAcceptanceStep {
+
     public static ExtractableResponse<Response> 거리_경로_조회_요청(String type, long source, long target) {
         return RestAssured.given().log().all().
                 accept(MediaType.APPLICATION_JSON_VALUE).
@@ -23,6 +24,18 @@ public class PathAcceptanceStep {
                 log().all().
                 extract();
     }
+
+    public static ExtractableResponse<Response> 어린이의_거리_경로_조회_요청(String type, long source, long target, String token) {
+        return RestAssured.given().log().all().
+                accept(MediaType.APPLICATION_JSON_VALUE).
+                when().
+                header("Authorization", token).
+                get("/paths?source={sourceId}&target={targetId}&type={type}", source, target, type).
+                then().
+                log().all().
+                extract();
+    }
+
 
     public static void 적절한_경로를_응답(ExtractableResponse<Response> response, ArrayList<Long> expectedPath) {
         PathResponse pathResponse = response.as(PathResponse.class);

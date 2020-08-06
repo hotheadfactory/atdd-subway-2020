@@ -6,6 +6,8 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import wooteco.security.oauth2.token.JwtTokenProvider;
 import wooteco.subway.common.acceptance.AcceptanceTest;
 import wooteco.subway.maps.line.acceptance.step.LineAcceptanceStep;
 import wooteco.subway.maps.line.dto.LineResponse;
@@ -14,9 +16,14 @@ import wooteco.subway.maps.station.dto.StationResponse;
 
 import static wooteco.subway.maps.line.acceptance.step.LineStationAcceptanceStep.지하철_노선에_지하철역_등록되어_있음;
 import static wooteco.subway.maps.map.acceptance.step.PathAcceptanceStep.*;
+import static wooteco.subway.members.member.acceptance.step.MemberAcceptanceStep.회원_생성을_요청;
 
 @DisplayName("지하철 경로 조회")
 public class PathAcceptanceTest extends AcceptanceTest {
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     private Long 교대역;
     private Long 강남역;
     private Long 양재역;
@@ -77,6 +84,22 @@ public class PathAcceptanceTest extends AcceptanceTest {
         //then
         적절한_경로를_응답(response, Lists.newArrayList(교대역, 강남역, 양재역));
         총_거리와_소요_시간_요금을_함께_응답함(response, 4, 3, 1450);
+    }
+
+    @DisplayName("로그인한 회원의 요금 할인이 반영된다.")
+    @Test
+    void findFareByLoginMember() {
+        //when
+        회원_생성을_요청("kid@gmail.com", "1234", 7);
+        ExtractableResponse<Response> response = 어린이의_거리_경로_조회_요청("DISTANCE", 1L, 3L, createToken());
+
+        //then
+        적절한_경로를_응답(response, Lists.newArrayList(교대역, 남부터미널역, 양재역));
+        총_거리와_소요_시간_요금을_함께_응답함(response, 3, 4, 600);
+    }
+
+    private String createToken() {
+        return jwtTokenProvider.createToken("kid@gmail.com");
     }
 
     private Long 지하철_노선_등록되어_있음(String name, String color, int extraFare) {
