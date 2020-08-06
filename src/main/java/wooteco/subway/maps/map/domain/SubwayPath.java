@@ -56,6 +56,9 @@ public class SubwayPath {
     }
 
     private int calculateAgeDiscount(int fare) {
+        if (age < 6 || age >= 65) {
+            return 0;
+        }
         if (age >= 6 && age < 13) {
             return (int) ((fare - 350) * 0.5);
         }
