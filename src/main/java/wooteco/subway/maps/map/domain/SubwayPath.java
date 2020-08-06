@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 public class SubwayPath {
     public static final int BASE_FARE = 1250;
     private List<LineStationEdge> lineStationEdges;
+    private int age;
 
-    public SubwayPath(List<LineStationEdge> lineStationEdges) {
+    public SubwayPath(List<LineStationEdge> lineStationEdges, int age) {
         this.lineStationEdges = lineStationEdges;
+        this.age = age;
     }
 
     public List<LineStationEdge> getLineStationEdges() {
@@ -35,7 +37,7 @@ public class SubwayPath {
     }
 
     public int calculateFare() {
-        return calculateFareByDistance() + calculateExtraFare();
+        return calculateAgeDiscount(calculateFareByDistance() + calculateExtraFare());
     }
 
     private int calculateFareByDistance() {
@@ -51,5 +53,15 @@ public class SubwayPath {
 
     private int calculateExtraFare() {
         return lineStationEdges.stream().mapToInt(LineStationEdge::getLineExtraFare).max().orElse(0);
+    }
+
+    private int calculateAgeDiscount(int fare) {
+        if (age >= 6 && age < 13) {
+            return (int) ((fare - 350) * 0.5);
+        }
+        if (age >= 13 && age < 19) {
+            return (int) ((fare - 350) * 0.8);
+        }
+        return fare;
     }
 }

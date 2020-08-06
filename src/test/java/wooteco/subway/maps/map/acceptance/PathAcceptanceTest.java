@@ -6,8 +6,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import wooteco.security.oauth2.token.JwtTokenProvider;
+import wooteco.security.core.TokenResponse;
 import wooteco.subway.common.acceptance.AcceptanceTest;
 import wooteco.subway.maps.line.acceptance.step.LineAcceptanceStep;
 import wooteco.subway.maps.line.dto.LineResponse;
@@ -16,13 +15,14 @@ import wooteco.subway.maps.station.dto.StationResponse;
 
 import static wooteco.subway.maps.line.acceptance.step.LineStationAcceptanceStep.지하철_노선에_지하철역_등록되어_있음;
 import static wooteco.subway.maps.map.acceptance.step.PathAcceptanceStep.*;
-import static wooteco.subway.members.member.acceptance.step.MemberAcceptanceStep.회원_생성을_요청;
+import static wooteco.subway.members.member.acceptance.step.MemberAcceptanceStep.로그인_되어_있음;
+import static wooteco.subway.members.member.acceptance.step.MemberAcceptanceStep.회원_등록되어_있음;
 
 @DisplayName("지하철 경로 조회")
 public class PathAcceptanceTest extends AcceptanceTest {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public static final String PASSWORD = "1234";
+    public static final String EMAIL = "kid@gmail.com";
 
     private Long 교대역;
     private Long 강남역;
@@ -31,6 +31,8 @@ public class PathAcceptanceTest extends AcceptanceTest {
     private Long 이호선;
     private Long 신분당선;
     private Long 삼호선;
+
+    private TokenResponse loginResponse;
 
     /**
      * 교대역    --- *2호선* ---   강남역
@@ -62,6 +64,9 @@ public class PathAcceptanceTest extends AcceptanceTest {
         지하철_노선에_지하철역_등록되어_있음(삼호선, null, 교대역, 0, 0);
         지하철_노선에_지하철역_등록되어_있음(삼호선, 교대역, 남부터미널역, 1, 2);
         지하철_노선에_지하철역_등록되어_있음(삼호선, 남부터미널역, 양재역, 2, 2);
+
+        회원_등록되어_있음(EMAIL, PASSWORD, 7);
+        loginResponse = 로그인_되어_있음(EMAIL, PASSWORD);
     }
 
     @DisplayName("두 역의 최단 거리 경로를 조회한다.")
@@ -90,16 +95,11 @@ public class PathAcceptanceTest extends AcceptanceTest {
     @Test
     void findFareByLoginMember() {
         //when
-        회원_생성을_요청("kid@gmail.com", "1234", 7);
-        ExtractableResponse<Response> response = 어린이의_거리_경로_조회_요청("DISTANCE", 1L, 3L, createToken());
+        ExtractableResponse<Response> response = 어린이의_거리_경로_조회_요청("DISTANCE", 1L, 3L, loginResponse);
 
         //then
         적절한_경로를_응답(response, Lists.newArrayList(교대역, 남부터미널역, 양재역));
         총_거리와_소요_시간_요금을_함께_응답함(response, 3, 4, 600);
-    }
-
-    private String createToken() {
-        return jwtTokenProvider.createToken("kid@gmail.com");
     }
 
     private Long 지하철_노선_등록되어_있음(String name, String color, int extraFare) {

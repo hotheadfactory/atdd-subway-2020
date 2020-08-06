@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
+import wooteco.security.core.TokenResponse;
 import wooteco.subway.maps.map.dto.PathResponse;
 import wooteco.subway.maps.station.dto.StationResponse;
 
@@ -25,11 +26,11 @@ public class PathAcceptanceStep {
                 extract();
     }
 
-    public static ExtractableResponse<Response> 어린이의_거리_경로_조회_요청(String type, long source, long target, String token) {
+    public static ExtractableResponse<Response> 어린이의_거리_경로_조회_요청(String type, long source, long target, TokenResponse tokenResponse) {
         return RestAssured.given().log().all().
+                auth().oauth2(tokenResponse.getAccessToken()).
                 accept(MediaType.APPLICATION_JSON_VALUE).
                 when().
-                header("Authorization", token).
                 get("/paths?source={sourceId}&target={targetId}&type={type}", source, target, type).
                 then().
                 log().all().

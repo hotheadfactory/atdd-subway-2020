@@ -71,7 +71,7 @@ public class MapServiceTest {
                 new LineStationEdge(lineStation6, line3.getId(), line3.getExtraFare()),
                 new LineStationEdge(lineStation7, line3.getId(), line3.getExtraFare())
         );
-        subwayPath = new SubwayPath(lineStations);
+        subwayPath = new SubwayPath(lineStations, 20);
 
         mapService = new MapService(lineService, stationService, pathService);
     }
@@ -79,10 +79,10 @@ public class MapServiceTest {
     @Test
     void findPath() {
         when(lineService.findLines()).thenReturn(lines);
-        when(pathService.findPath(anyList(), anyLong(), anyLong(), any())).thenReturn(subwayPath);
+        when(pathService.findPath(anyList(), anyLong(), anyLong(), any(), anyInt())).thenReturn(subwayPath);
         when(stationService.findStationsByIds(anyList())).thenReturn(stations);
 
-        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE);
+        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE, 20);
 
         assertThat(pathResponse.getStations()).isNotEmpty();
         assertThat(pathResponse.getDuration()).isNotZero();

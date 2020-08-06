@@ -1,5 +1,6 @@
 package wooteco.subway.maps.map.application;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.subway.maps.line.application.LineService;
 import wooteco.subway.maps.line.domain.Line;
@@ -13,7 +14,6 @@ import wooteco.subway.maps.map.dto.PathResponseAssembler;
 import wooteco.subway.maps.station.application.StationService;
 import wooteco.subway.maps.station.domain.Station;
 import wooteco.subway.maps.station.dto.StationResponse;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -43,9 +43,9 @@ public class MapService {
         return new MapResponse(lineResponses);
     }
 
-    public PathResponse findPath(Long source, Long target, PathType type) {
+    public PathResponse findPath(Long source, Long target, PathType type, int age) {
         List<Line> lines = lineService.findLines();
-        SubwayPath subwayPath = pathService.findPath(lines, source, target, type);
+        SubwayPath subwayPath = pathService.findPath(lines, source, target, type, age);
         Map<Long, Station> stations = stationService.findStationsByIds(subwayPath.extractStationId());
 
         return PathResponseAssembler.assemble(subwayPath, stations);
