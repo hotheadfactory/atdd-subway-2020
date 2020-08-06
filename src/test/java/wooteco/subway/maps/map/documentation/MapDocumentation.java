@@ -32,7 +32,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 @WebMvcTest(controllers = {MapController.class})
 public class MapDocumentation extends Documentation {
@@ -51,8 +54,8 @@ public class MapDocumentation extends Documentation {
     @Test
     void findPath() {
         Map<String, Object> params = new HashMap<>();
-        params.put("source", 1L);
-        params.put("target", 3L);
+        params.put("sourceId", 1L);
+        params.put("targetId", 3L);
         params.put("type", PathType.DISTANCE);
 
         List<StationResponse> stationResponses = Lists.newArrayList(
@@ -75,10 +78,10 @@ public class MapDocumentation extends Documentation {
                         getDocumentResponse(),
                         requestHeaders(
                                 headerWithName("Authorization").description("Bearer auth credentials")),
-                        requestFields(
-                                fieldWithPath("source").type(JsonFieldType.NUMBER).description("출발역 아이디"),
-                                fieldWithPath("target").type(JsonFieldType.NUMBER).description("도착역 아이디"),
-                                fieldWithPath("type").type(JsonFieldType.STRING).description("검색 타입 (최단거리 / 최소시간)")
+                        pathParameters(
+                                parameterWithName("sourceId").description("출발역 아이디"),
+                                parameterWithName("targetId").description("도착역 아이디"),
+                                parameterWithName("type").description("검색 타입 (최단거리 / 최소시간)")
                         ),
                         responseFields(
                                 fieldWithPath("duration").type(JsonFieldType.NUMBER).description("소요 시간"),

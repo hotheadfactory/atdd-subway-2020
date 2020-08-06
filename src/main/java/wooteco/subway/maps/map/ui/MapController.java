@@ -23,7 +23,7 @@ public class MapController {
     public ResponseEntity<PathResponse> findPath(@UserInfoPrincipal LoginMember loginMember, @RequestParam Long source, @RequestParam Long target,
                                                  @RequestParam PathType type) {
         int age = 20;
-        if (loginMember != null) {
+        if (loginMember != null && loginMember.getAge() != null) {
             age = loginMember.getAge();
         }
         return ResponseEntity.ok(mapService.findPath(source, target, type, age));
